@@ -1,233 +1,673 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>KENOX X CHEATS!</title>
-
-<style>
-body{
-    margin:0;
-    background:#050505;
-    font-family:Consolas, monospace;
-    color:#fff;
-    overflow:hidden;
-}
-
-/* Animated Background */
-body::before{
-    content:"";
-    position:absolute;
-    width:200%;
-    height:200%;
-    background:linear-gradient(45deg,#00ffcc,#ff00ff,#00ccff,#ffcc00);
-    animation:bgMove 10s linear infinite;
-    opacity:0.08;
-}
-@keyframes bgMove{
-    0%{transform:translate(-25%,-25%)}
-    100%{transform:translate(25%,25%)}
-}
-
-/* Title */
-#title{
-    text-align:center;
-    font-size:40px;
-    margin-top:20px;
-    font-weight:bold;
-    animation:glow 2s infinite alternate;
-}
-
-@keyframes glow{
-    from{text-shadow:0 0 10px #00ffcc,0 0 20px #00ffcc;}
-    to{text-shadow:0 0 20px #ff00ff,0 0 40px #ff00ff;}
-}
-
-/* Textarea */
-textarea{
-    width:90%;
-    height:220px;
-    margin:20px auto;
-    display:block;
-    background:#0f0f0f;
-    border:1px solid #333;
-    color:#00ffcc;
-    padding:10px;
-    outline:none;
-    box-shadow:0 0 10px #00ffcc33;
-}
-
-/* Button */
-button{
-    display:block;
-    margin:10px auto;
-    padding:12px 25px;
-    border:none;
-    background:linear-gradient(90deg,#00ffcc,#ff00ff);
-    color:#000;
-    font-weight:bold;
-    cursor:pointer;
-    border-radius:8px;
-    transition:0.3s;
-}
-button:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 20px #00ffcc;
-}
-
-/* File + Drop */
-#fileInput{
-    display:block;
-    margin:10px auto;
-}
-
-#dropZone{
-    width:90%;
-    margin:15px auto;
-    padding:20px;
-    border:2px dashed #00ffcc;
-    text-align:center;
-    color:#aaa;
-}
-
-/* Output */
-pre{
-    width:90%;
-    margin:20px auto;
-    padding:15px;
-    background:#0f0f0f;
-    color:#00ffcc;
-    border-left:3px solid #00ffcc;
-    box-shadow:0 0 10px #00ffcc33;
-    height:200px;
-    overflow:auto;
-}
-</style>
-</head>
-
-<body>
-
-<div id="title">KENOX X CHEATS!</div>
-
-<textarea id="dumpInput" placeholder="Paste dump.cs here..."></textarea>
-
-<button onclick="parseDump()">SCAN BONES</button>
-
-<input type="file" id="fileInput" accept=".cs,.txt">
-
-<div id="dropZone">DRAG & DROP dump.cs / .txt HERE</div>
-
-<pre id="output"></pre>
-
-<script>
-
-/* Animated Title */
-const titles = [
-    "KENOX X CHEATS!",
-    "ULTRA MEMORY SCANNER",
-    "BONE OFFSET FINDER",
-    "POWERED BY KENOX"
-];
-
-let i = 0;
-setInterval(()=>{
-    i = (i + 1) % titles.length;
-    document.getElementById("title").innerText = titles[i];
-},7000);
-
-/* Bone Map */
-const boneMap = {
-    "OLCJOGDHJJJ": "Head",
-    "OLJBCONDGLO": "Hip",
-    "HCLMADAFLPD": "Chest",
-    "MPJBGDJJJMJ": "Root",
-    "BMGCHFGEDDA": "LeftAnkle",
-    "AGHJLIMNPJA": "RightAnkle",
-    "FDMBKCKMODA": "LeftToe",
-    "CKABHDJDMAP": "RightToe",
-    "LIBEIIIAGIK": "LeftShoulder",
-    "HDEPJIBNIIK": "RightShoulder",
-    "NJDDAPKPILB": "RightHand",
-    "JHIBMHEMJOL": "LeftHand",
-    "JBACCHNMGNJ": "RightForearm",
-    "FGECMMJKFNC": "LeftForearm"
-};
-
-/* File Input */
-document.getElementById("fileInput").addEventListener("change", e => {
-    handleFile(e.target.files[0]);
-});
-
-/* Drag & Drop */
-const dropZone = document.getElementById("dropZone");
-
-dropZone.addEventListener("dragover", e => {
-    e.preventDefault();
-    dropZone.style.borderColor = "#ff00ff";
-});
-
-dropZone.addEventListener("dragleave", () => {
-    dropZone.style.borderColor = "#00ffcc";
-});
-
-dropZone.addEventListener("drop", e => {
-    e.preventDefault();
-    dropZone.style.borderColor = "#00ffcc";
-    handleFile(e.dataTransfer.files[0]);
-});
-
-/* File Reader */
-function handleFile(file)
-{
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function() {
-        parseDumpFast(reader.result);
-    };
-
-    reader.readAsText(file);
-}
-
-/* Fast Parser */
-function parseDumpFast(text)
-{
-    let result = {};
-    let lines = text.split("\n");
-
-    for (let line of lines)
-    {
-        for (let key in boneMap)
-        {
-            if (line.includes(key))
-            {
-                let match = line.match(/0x([0-9A-Fa-f]+)/);
-                if (match && !result[key])
-                    result[key] = match[1];
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mitmproxy UID Manager Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .proxy-info {
+            background: #f0f0f0;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .panel h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        /* Form Styles */
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+        }
+        
+        button.danger {
+            background: linear-gradient(135deg, #f56565 0%, #c53030 100%);
+        }
+        
+        button.success {
+            background: linear-gradient(135deg, #48bb78 0%, #2f855a 100%);
+        }
+        
+        /* UID List */
+        .uid-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .uid-item {
+            background: #f7f7f7;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .uid-item:hover {
+            background: #e8e8e8;
+        }
+        
+        .uid-value {
+            font-weight: bold;
+            color: #333;
+            font-family: monospace;
+            font-size: 16px;
+        }
+        
+        .uid-meta {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .uid-actions {
+            float: right;
+        }
+        
+        .uid-actions button {
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        /* Logs */
+        .logs {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: monospace;
+            font-size: 12px;
+            height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .log-entry {
+            padding: 5px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .log-time {
+            color: #858585;
+        }
+        
+        .log-info {
+            color: #4ec9b0;
+        }
+        
+        .log-success {
+            color: #6a9955;
+        }
+        
+        .log-error {
+            color: #f48771;
+        }
+        
+        /* Full Width Panel */
+        .full-width {
+            grid-column: span 2;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .full-width {
+                grid-column: span 1;
             }
         }
-    }
-
-    let output = "";
-
-    for (let key in boneMap)
-    {
-        if (result[key])
-            output += `${boneMap[key]} = 0x${result[key]}\n`;
-        else
-            output += `${boneMap[key]} = NOT FOUND\n`;
-    }
-
-    document.getElementById("output").textContent = output;
-}
-
-/* Button (manual paste) */
-function parseDump()
-{
-    parseDumpFast(document.getElementById("dumpInput").value);
-}
-
-</script>
-
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 mitmproxy UID Manager Dashboard</h1>
+            <p>Manage and monitor User IDs captured through your proxy</p>
+            <div class="proxy-info">
+                🌐 Proxy: 10.78.54.245:8080 | 📊 Web UI: http://10.78.54.245:8081
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalUIDs">0</div>
+                <div class="stat-label">Total UIDs Captured</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalRequests">0</div>
+                <div class="stat-label">Requests Processed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeUIDs">0</div>
+                <div class="stat-label">Active UIDs (24h)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="blockedUIDs">0</div>
+                <div class="stat-label">Blocked UIDs</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="panel">
+                <h2>➕ Add New UID</h2>
+                <div class="input-group">
+                    <label>User ID (UID):</label>
+                    <input type="text" id="newUID" placeholder="Enter UID (e.g., 123456789)" />
+                </div>
+                <div class="input-group">
+                    <label>Notes / Description:</label>
+                    <textarea id="uidNotes" rows="3" placeholder="Optional notes about this UID..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Status:</label>
+                    <select id="uidStatus">
+                        <option value="active">Active (Allow)</option>
+                        <option value="blocked">Blocked (Deny)</option>
+                        <option value="monitor">Monitor Only</option>
+                    </select>
+                </div>
+                <button onclick="addUID()" class="success">➕ Add UID</button>
+                <button onclick="clearForm()" style="margin-left: 10px; background: #666;">Clear</button>
+            </div>
+            
+            <div class="panel">
+                <h2>📋 UID List</h2>
+                <div class="input-group">
+                    <input type="text" id="searchUID" placeholder="🔍 Search UID..." onkeyup="searchUIDs()" />
+                </div>
+                <div class="uid-list" id="uidList">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading UIDs...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel full-width">
+                <h2>📊 Live Capture Logs</h2>
+                <div class="logs" id="logs">
+                    <div class="log-entry">[INFO] Waiting for mitmproxy traffic...</div>
+                </div>
+                <div style="margin-top: 10px;">
+                    <button onclick="clearLogs()">Clear Logs</button>
+                    <button onclick="exportData()" class="success">Export Data (JSON)</button>
+                    <button onclick="importData()" class="success">Import Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3>✏️ Edit UID</h3>
+            <div class="input-group">
+                <label>UID:</label>
+                <input type="text" id="editUIDValue" readonly />
+            </div>
+            <div class="input-group">
+                <label>Notes:</label>
+                <textarea id="editNotes" rows="3"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Status:</label>
+                <select id="editStatus">
+                    <option value="active">Active</option>
+                    <option value="blocked">Blocked</option>
+                    <option value="monitor">Monitor</option>
+                </select>
+            </div>
+            <button onclick="saveEdit()">Save Changes</button>
+            <button onclick="closeModal()" style="background: #666;">Cancel</button>
+        </div>
+    </div>
+    
+    <script>
+        // Data storage
+        let uids = JSON.parse(localStorage.getItem('mitmproxy_uids')) || {};
+        let logs = JSON.parse(localStorage.getItem('mitmproxy_logs')) || [];
+        let requestCount = parseInt(localStorage.getItem('request_count')) || 0;
+        
+        // Initialize
+        function init() {
+            renderUIDList();
+            updateStats();
+            renderLogs();
+            startLogPolling();
+        }
+        
+        // Add UID
+        function addUID() {
+            const uid = document.getElementById('newUID').value.trim();
+            if (!uid) {
+                alert('Please enter a UID');
+                return;
+            }
+            
+            if (uids[uid]) {
+                alert('UID already exists!');
+                return;
+            }
+            
+            uids[uid] = {
+                id: uid,
+                notes: document.getElementById('uidNotes').value,
+                status: document.getElementById('uidStatus').value,
+                first_seen: new Date().toISOString(),
+                last_seen: new Date().toISOString(),
+                request_count: 0
+            };
+            
+            saveData();
+            renderUIDList();
+            updateStats();
+            addLog(`UID added: ${uid} (${uids[uid].status})`, 'success');
+            clearForm();
+        }
+        
+        // Delete UID
+        function deleteUID(uid) {
+            if (confirm(`Delete UID ${uid}?`)) {
+                delete uids[uid];
+                saveData();
+                renderUIDList();
+                updateStats();
+                addLog(`UID deleted: ${uid}`, 'error');
+            }
+        }
+        
+        // Edit UID
+        let currentEditUID = null;
+        
+        function editUID(uid) {
+            currentEditUID = uid;
+            document.getElementById('editUIDValue').value = uid;
+            document.getElementById('editNotes').value = uids[uid].notes || '';
+            document.getElementById('editStatus').value = uids[uid].status || 'active';
+            document.getElementById('editModal').style.display = 'flex';
+        }
+        
+        function saveEdit() {
+            if (currentEditUID && uids[currentEditUID]) {
+                uids[currentEditUID].notes = document.getElementById('editNotes').value;
+                uids[currentEditUID].status = document.getElementById('editStatus').value;
+                saveData();
+                renderUIDList();
+                updateStats();
+                addLog(`UID updated: ${currentEditUID}`, 'info');
+                closeModal();
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        
+        // Search UIDs
+        function searchUIDs() {
+            const searchTerm = document.getElementById('searchUID').value.toLowerCase();
+            const filtered = Object.values(uids).filter(uid => 
+                uid.id.toLowerCase().includes(searchTerm) ||
+                (uid.notes && uid.notes.toLowerCase().includes(searchTerm))
+            );
+            renderUIDList(filtered);
+        }
+        
+        // Render UID list
+        function renderUIDList(filteredList = null) {
+            const list = filteredList || Object.values(uids);
+            const container = document.getElementById('uidList');
+            
+            if (list.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: #999;">No UIDs captured yet</div>';
+                return;
+            }
+            
+            container.innerHTML = list.map(uid => `
+                <div class="uid-item">
+                    <div class="uid-value">
+                        ${uid.id}
+                        <span class="uid-actions">
+                            <button onclick="editUID('${uid.id}')" style="background: #4a5568;">✏️</button>
+                            <button onclick="deleteUID('${uid.id}')" class="danger">🗑️</button>
+                        </span>
+                    </div>
+                    <div class="uid-meta">
+                        Status: <strong style="color: ${uid.status === 'blocked' ? '#f56565' : (uid.status === 'active' ? '#48bb78' : '#ed8936')}">${uid.status}</strong>
+                        | First Seen: ${new Date(uid.first_seen).toLocaleString()}
+                        | Requests: ${uid.request_count || 0}
+                        ${uid.notes ? `<br>📝 ${uid.notes}` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalUIDs').textContent = Object.keys(uids).length;
+            document.getElementById('totalRequests').textContent = requestCount;
+            
+            const activeCount = Object.values(uids).filter(u => u.status === 'active').length;
+            const blockedCount = Object.values(uids).filter(u => u.status === 'blocked').length;
+            
+            document.getElementById('activeUIDs').textContent = activeCount;
+            document.getElementById('blockedUIDs').textContent = blockedCount;
+        }
+        
+        // Add log entry
+        function addLog(message, type = 'info') {
+            logs.unshift({
+                time: new Date().toISOString(),
+                message: message,
+                type: type
+            });
+            
+            // Keep only last 100 logs
+            if (logs.length > 100) logs.pop();
+            
+            saveLogs();
+            renderLogs();
+        }
+        
+        // Render logs
+        function renderLogs() {
+            const container = document.getElementById('logs');
+            container.innerHTML = logs.map(log => `
+                <div class="log-entry">
+                    <span class="log-time">[${new Date(log.time).toLocaleTimeString()}]</span>
+                    <span class="log-${log.type}">${log.message}</span>
+                </div>
+            `).join('');
+        }
+        
+        function clearLogs() {
+            logs = [];
+            saveLogs();
+            renderLogs();
+            addLog('Logs cleared', 'info');
+        }
+        
+        // Export data
+        function exportData() {
+            const data = {
+                uids: uids,
+                logs: logs,
+                requestCount: requestCount,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `mitmproxy_uids_${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            addLog('Data exported successfully', 'success');
+        }
+        
+        // Import data
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = e => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        uids = data.uids || {};
+                        logs = data.logs || [];
+                        requestCount = data.requestCount || 0;
+                        saveData();
+                        saveLogs();
+                        localStorage.setItem('request_count', requestCount);
+                        renderUIDList();
+                        updateStats();
+                        renderLogs();
+                        addLog('Data imported successfully', 'success');
+                    } catch (err) {
+                        alert('Invalid file format');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+        
+        // Simulate receiving data from mitmproxy (in real implementation, connect to mitmproxy API)
+        function startLogPolling() {
+            // This simulates receiving UIDs from your mitmproxy script
+            // In production, replace with actual API calls to mitmproxy
+            
+            setInterval(() => {
+                // Simulate random UID captures for demo
+                if (Math.random() < 0.3) { // 30% chance
+                    const randomUID = Math.floor(Math.random() * 900000000) + 100000000;
+                    const url = 'https://api.example.com/login';
+                    
+                    addLog(`[CAPTURED] UID: ${randomUID} from ${url}`, 'success');
+                    
+                    if (!uids[randomUID]) {
+                        uids[randomUID] = {
+                            id: randomUID.toString(),
+                            notes: 'Auto-captured from traffic',
+                            status: 'monitor',
+                            first_seen: new Date().toISOString(),
+                            last_seen: new Date().toISOString(),
+                            request_count: 1
+                        };
+                        saveData();
+                        renderUIDList();
+                        updateStats();
+                    } else {
+                        uids[randomUID].last_seen = new Date().toISOString();
+                        uids[randomUID].request_count = (uids[randomUID].request_count || 0) + 1;
+                        saveData();
+                    }
+                    
+                    requestCount++;
+                    localStorage.setItem('request_count', requestCount);
+                    updateStats();
+                }
+            }, 5000);
+        }
+        
+        function clearForm() {
+            document.getElementById('newUID').value = '';
+            document.getElementById('uidNotes').value = '';
+            document.getElementById('uidStatus').value = 'active';
+        }
+        
+        function saveData() {
+            localStorage.setItem('mitmproxy_uids', JSON.stringify(uids));
+            localStorage.setItem('request_count', requestCount);
+        }
+        
+        function saveLogs() {
+            localStorage.setItem('mitmproxy_logs', JSON.stringify(logs));
+        }
+        
+        // API Integration with real mitmproxy (optional)
+        async function fetchFromMitmproxy() {
+            try {
+                const response = await fetch('http://10.78.54.245:8081/api/flows');
+                const data = await response.json();
+                // Process flows and extract UIDs
+                console.log('Connected to mitmproxy API', data);
+            } catch (err) {
+                console.log('mitmproxy API not accessible - running in demo mode');
+            }
+        }
+        
+        // Start
+        init();
+    </script>
 </body>
 </html>
